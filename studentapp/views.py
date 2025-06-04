@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from studentapp.serializers import RegisterSerializer,CategorySerializer,CourseSerializer,EnrollmentSerializer
-from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView,ListAPIView
+from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView,ListAPIView,RetrieveUpdateAPIView
 from studentapp.models import Category,Course,Enrollment
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
@@ -75,3 +75,9 @@ class EnrollmentListView(ListAPIView):
 
     def get_queryset(self):
         return Enrollment.objects.filter(user=self.request.user)
+    
+
+class EnrollmentDetailView(RetrieveUpdateAPIView):
+    queryset = Enrollment.objects.all()
+    serializer_class = EnrollmentSerializer
+    permission_classes = [IsAuthenticated]
