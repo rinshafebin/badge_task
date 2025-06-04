@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from studentapp.models import Category,Course
+from studentapp.models import Category,Course,Enrollment
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(required=True)
@@ -16,14 +16,19 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         return user
 
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'name', 'description'] 
         
-class CourseSerializer(serializers.ModelSerializer):
-    category = serializers.StringRelatedField()
 
+class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['id', 'name', 'description', 'category', 'created_at']
+        fields = ['id', 'title', 'description', 'category']
+
+class EnrollmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Enrollment
+        fields = ['id', 'user', 'course', 'enrolled_on']
