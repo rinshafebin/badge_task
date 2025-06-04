@@ -1,10 +1,7 @@
 from django.contrib import admin
-from studentapp.models import Student,Course,Assessment,Enrollment,Grade
-# Register your models here.
+from studentapp.models import Category,Course,Enrollment
 
-admin.site.register(Student)
+admin.site.register(Category)
 admin.site.register(Course)
-admin.site.register(Assessment)
-admin.site.register(Enrollment)
-admin.site.register(Grade)
+
 

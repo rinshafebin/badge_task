@@ -1,55 +1,34 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
-class Student(models.Model):
-    first_name = models.CharField(max_length=10)
-    last_name = models.CharField(max_length=10)
-    email = models.EmailField(unique=True)
-    enrollment_date = models.DateField(auto_now_add=True)
-    
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField()
+
     def __str__(self):
-        return self.first_name
-
+        return self.name
 
 
 class Course(models.Model):
-    name = models.CharField(max_length=100)
-    code = models.IntegerField(unique=True)
+    title = models.CharField(max_length=200)
     description = models.TextField()
-    
-    def __str__(self):
-        return self.name
- 
-   
-class Enrollment(models.Model):
-    student = models.ForeignKey(Student,on_delete=models.CASCADE)
-    course = models.ForeignKey(Course,on_delete=models.CASCADE)
-    enrollment_date = models.DateField(auto_now_add=True)
-    
-    class Meta:
-        unique_together = ('student','course')
-        
-    def __str__(self):
-        return f'{self.student}'
+    instructor = models.CharField(max_length=100)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='courses')
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
 
-
-
-class Assessment(models.Model):
-    course = models.ForeignKey(Course,on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
-    total_marks = models.IntegerField()
-    due_date = models.DateField()
-    
     def __str__(self):
         return self.title
 
+class Enrollment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='enrollments')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')
+    enrolled_on = models.DateTimeField(auto_now_add=True)
+    progress = models.IntegerField(default=0)
 
-
-class Grade(models.Model):
-    student = models.ForeignKey(Student,on_delete=models.CASCADE)
-    assessment = models.ForeignKey(Assessment,on_delete=models.CASCADE)
-    marks_obtained = models.IntegerField()
+    class Meta:
+        unique_together = ('user', 'course')  
     
     def __str__(self):
-        return f'{self.student} - {self.marks_obtained}'
-    
+        return f"{self.user.username} - {self.course.title}"

@@ -1,29 +1,29 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
-from studentapp.models import Student,Course,Enrollment,Assessment,Grade
+from studentapp.models import Category,Course
 
-class StudentSerializer(serializers.ModelSerializer):
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(required=True)
+
     class Meta:
-        model = Student
-        fields ='__all__'
+        model = User
+        fields = ['id', 'username', 'password']
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            password=validated_data['password']
+        )
+        return user
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'description'] 
         
 class CourseSerializer(serializers.ModelSerializer):
+    category = serializers.StringRelatedField()
+
     class Meta:
         model = Course
-        fields = '__all__'
-        
-class EnrollmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Enrollment
-        fields = '__all__'
-
-class AssessmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Assessment
-        fields = '__all__'
-        
-
-class GradeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Grade
-        fields = '__all__'
-             
+        fields = ['id', 'name', 'description', 'category', 'created_at']
