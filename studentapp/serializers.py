@@ -29,6 +29,7 @@ class CourseSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description', 'category']
 
 class EnrollmentSerializer(serializers.ModelSerializer):
+    progress = serializers.IntegerField(required=True)
     class Meta:
         model = Enrollment
-        fields = ['id', 'user', 'course', 'enrolled_on']
+        fields = ['id', 'user', 'course', 'enrolled_on','progress']
